@@ -14,14 +14,127 @@ public class Menu {
         System.out.println("*******************************");
     }
 
+    /*
+    access rights for all:
+     */
+
     private void printUserMainMenu(){
         System.out.println("\nPlease make a selection");
         System.out.println("[1] Register");
-        System.out.println("[2] Login");
-        System.out.println("[3] Search a hotel");
-        System.out.println("[4] Book a room");
-        System.out.println("[5] Exit");
+            // (check login)
+            // -- enter your username, check if username already exists
+            // -- enter your password; no need to check password yet
+        System.out.println("[2] Login"); // if logged in, show "logout"
+            // Check login and pass
+            //-- enter your name
+            //-- enter your password
+        System.out.println("[3] Search / book a room");
+            /*
+              -- [1] Search room by hotel and dates"; // for all
+                ---- Please enter the hotel name
+                ---- Please enter you check in date
+                ---- Please enter your checkout date
+                    We must show the list of rooms
+                        ------ "Do you want to book a room?"
+                        ------ if yes, "Please choose the room you want to book"
+                        ------ get room number from user and call method bookroom with: Room + checkindate + checkoutdate
+                            -------- "You have successfully booked your room" + print booking details (hotel, room, dates)
+                            -------- return to "search room menu"
+                        ------ if no: return to: search / book a room menu
+              -- [2] Search room by city and dates"; // for all
+                ---- Please enter the city
+                ---- Please enter you check in date
+                ---- Please enter your checkout date
+                    We must show the list of rooms
+                        ------ "Do you want to book a room?"
+                        ------ if yes, "Please choose the room you want to book"
+                        ------ get room number from user and call method bookroom with: Room + checkindate + checkoutdate
+                            -------- "You have successfully booked your room" + print booking details (hotel, room, dates)
+                            -------- return to "search room menu"
+                        ------ if no: return to: search / book a room menu
+              -- [3] Go back to main menu";
+             */
+        System.out.println("[4] Search a hotel");
+        /*
+        -- [1] Search hotel by name");
+            ---- Please enter the hotel name
+                    We must show the list of hotels
+                    **** if time, add function to book room from here
+        -- [2] Search hotel by city and dates");
+                    We must show a list of hotels
+                    **** if time, add function to book room from here
+        -- [3] Go back to main menu");
+         */
+        System.out.println("[5] Admin menu"); // only admins (require sign-in); go to printAdminMainMenu
+        /*
+        -- [1] Choose database")
+            ---- "Please choose the database you want to work with"
+            ---- [1] XML
+            ---- [2] Binary
+            ---- confirm: "Are you sure you want to change database? If you do, we will restart the system"
+        -- [2] Add a hotel"); // constructor with all fields: name, city,
+            ---- "Please enter hotel name: "
+            ---- "Please enter hotel city: "
+            **** call constructor
+            **** check for null exception: throw exception "We could not create this hotel"
+            **** add this hotel to DAO
+            ---- "Your hotel was created" + print hotel
+            **** back to admin menu
+        -- [3] Add a room"); // first find hotel, then constructor with all fields,
+            ---- "Please enter the name of the hotel in which you want to add a room"
+            **** search hotel by name
+            ---- show list of hotels
+            ---- "Please choose the number of the hotel in which you want to add a room"
+            ---- "Please enter the number of guests"
+            **** call constructor and create room
+            **** check for null exception
+            **** add room to DAO
+            ---- "Your room was successfully created" + print room
+            **** back to main admin menu
+        -- [4] Update or delete a hotel"); // do like we do for users
+            ---- "Please enter the name of the hotel you want to update or delete"
+            **** search hotel by name
+            ---- show list of hotels
+            ---- "Please choose the number of the hotel you want to update or delete"
+                ------ [1] update hotel
+                    **** get hotel by ID
+                    ---- "Please enter new hotel name"
+                    **** set hotel name
+                    ---- "Please enter new hotel city"
+                    **** set hotel city
+                ------ [2] delete hotel
+                    **** get hotel by ID, find it and delete it in DAO
+        -- [5] Update or delete a room");
+            ---- "Please enter the name of the hotel of the room you want to update or delete"
+            **** search hotel by hotel name
+            ---- show list of hotels
+            ---- "Please choose the number of the hotel of the room you want to update or delete"
+            ---- print list of rooms of this hotel
+            ---- "Please choose the number of the room you want to update or delete"
+                ------ [1] update room
+                    **** get room from list
+                    ---- "Please enter new room parameters "
+                    set method to set new parameters
+                ------ [2] delete room
+                    **** get room by ID, find it and delete it in DAO
+        -- [6] Find and update a user"); // search user by userName
+            ---- "Please enter the username of the user you want to update or delete"
+                ------ [1] update user
+                    **** "Please enter new password"
+                    **** "Please enter new email"
+                ------ [2] delete user
+                    **** get user by username, find it and delete it in DAO
+        [7] Back to main menu
+         */
+
+
+        System.out.println("[6] Exit");
     }
+
+    /*if enough time:
+    - allow user to change his information
+
+     */
 
     private void printUserHotelMenu(){
         System.out.println("\nPlease make a selection");
@@ -30,35 +143,67 @@ public class Menu {
         System.out.println("[3] Go back to main menu");
     }
 
+    /*
+     print hotel list
+     then in book room from hotel list method: ask user to chose hotel number in the list, print rooms, and book 1
+      */
+
     private void printUserHotelResultsMenu(){
         System.out.println("\nPlease make a selection");
-        System.out.println("[1] Book a room");
+        System.out.println("[1] Book a room"); // for admin / users
         System.out.println("[2] Go back to hotel search");
         System.out.println("[3] Go back to main menu");
     }
 
     private void printUserRoomMenu(){
         System.out.println("\nPlease make a selection");
-        System.out.println("[1] Search room by hotel and dates");
-        System.out.println("[2] Search room by city and dates");
+        System.out.println("[1] Search room by hotel and dates"); // forr all
+        //--searching room
+        System.out.println("[2] Search room by city and dates"); // for all
         System.out.println("[3] Go back to main menu");
     }
 
     private void printUserRoomResultsMenu(){
         System.out.println("\nPlease make a selection");
-        System.out.println("[1] Book a room");
+        System.out.println("[1] Book a room"); // for admin / users
         System.out.println("[2] Go back to room search");
         System.out.println("[3] Go back to main menu");
     }
 
+    private void adminChooseDB(){
+        System.out.println("Please make a selection");
+        System.out.println("[1] Choose XML database");
+        System.out.println("[2] Choose binary database"); // tell them that if they change DB, system will restart
+    }
+
     private void printAdminMainMenu(){
         System.out.println("Please make a selection");
-        System.out.println("[1] Login");
-        System.out.println("[2] Add a hotel");
-        System.out.println("[3] Update or delete a hotel");
-        System.out.println("[4] Update or delete a room");
-        System.out.println("[5] Exit");
+        System.out.println("[1] Choose database");
+        System.out.println("[2] Add a hotel"); // constructor with all fields: name, city,
+        System.out.println("[3] Add a room"); // first find hotel, then constructor with all fields,
+        System.out.println("[4] Update or delete a hotel"); // do like we do for users
+        System.out.println("[5] Update or delete a room");
+        System.out.println("[6] Find and update a user"); // search user by userName
+        System.out.println("[7] Back to main menu");
     }
+
+    // find room: it will return a list
+    // user should be able to choose one of the possibilities and do an action on it
+
+    private void addRoom(){
+        System.out.println("Please enter the hotel in which you want to add a room");
+        //search hotel method; not void but Hotel. User search not void, but string; and admin search is Hotel.
+
+    }
+
+    private void searchUser(){
+        System.out.println("Please enter the login of the user");
+        //search user method; not void but User. User search not void, but string; and admin search is Hotel.
+        // two points: update user, delete user. new menu with 3 points: update user, delete user, go back to admin menu
+        // do not update / delete admins: so in search, if it is admin, then return: "you cannot update or delete admins"
+
+    }
+
 
     public void runMenu(){
 
