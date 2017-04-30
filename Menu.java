@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
 /**
@@ -5,7 +8,8 @@ import java.util.Scanner;
  */
 public class Menu {
 
-    boolean exit = false;
+    private boolean exit = false;
+    private BufferedReader br = null;
 
     private void printHeader(){
         System.out.println("*******************************");
@@ -210,7 +214,7 @@ public class Menu {
         printHeader();
         while(!exit){
             printUserMainMenu();
-            performActionUserMainMenu(getMenuInput(1,5));
+            performActionUserMainMenu(getMenuInput(1,6));
         }
 
     }
@@ -242,18 +246,22 @@ public class Menu {
                 //login
                 break;
             case 3:
-                printUserHotelMenu();
-                performActionUserHotelMenu(getMenuInput(1,3));
-                break;
-            case 4:
                 printUserRoomMenu();
                 performActionUserRoomMenu(getMenuInput(1,3));
                 break;
+            case 4:
+                printUserHotelMenu();
+                performActionUserHotelMenu(getMenuInput(1,3));
+                break;
             case 5:
+                // login
+                printAdminMainMenu();
+                //performActionAdminMainMenu();
+            case 6:
                 exit = true;
                 System.out.println("Thank you for using our application");
-           // default:
-           //     System.out.println("An unknown error has occurred");
+                // default:
+                //     System.out.println("An unknown error has occurred");
         }
     }
 
@@ -365,17 +373,25 @@ public class Menu {
 
     private void searchHotelByName(){
 
-        Scanner scan = new Scanner(System.in);
+
+        String hotelName = "";
 
         System.out.println("Please enter the hotel name");
-        String hotelName = scan.nextLine();
+        while(true){
+            try{
+                hotelName = readStringFromConsole();
+                break;
+            }catch(IOException e) {
+                continue;
+            }
+        }
 
         // here call controller function to search for hotel with hotelName
 
-        System.out.println("Here is your hotel information: ");
+        System.out.println("Here is a list of hotels matching your criteria: ");
 
-        printUserHotelResultsMenu();
-        performActionUserHotelResultsMenu(getMenuInput(1,3));
+        //printUserHotelResultsMenu();
+        //performActionUserHotelResultsMenu(getMenuInput(1,3));
     }
 
     private void searchHotelByCityDates(){
@@ -456,4 +472,11 @@ public class Menu {
         System.out.println("According to some logic, the room has been booked. Please check your email.");
 
     }
+
+    private String readStringFromConsole() throws IOException {
+        br = new BufferedReader(new InputStreamReader(System.in));
+        return br.readLine(); //throw IOException
+    }
+
 }
+
