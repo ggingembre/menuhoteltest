@@ -339,12 +339,6 @@ public class Menu {
         boolean ok = false;
 
         while (!ok){
-            System.out.println("Please enter your first name");
-            firstName = scan.nextLine();
-            System.out.println("Please enter your last name");
-            lastName = scan.nextLine();
-            System.out.println("Please enter your address");
-            address = scan.nextLine();
             System.out.println("Please enter your email");
             email = scan.nextLine();
             System.out.println("Please enter your username");
@@ -364,7 +358,7 @@ public class Menu {
             if (yn.equalsIgnoreCase("Y")) ok = true;
         }
 
-        newUser = new User(firstName, lastName, address, email, userName, password);
+        newUser = new User(email, userName, password);
 
         System.out.println(newUser);
         // here save this user to the database (and check if user already exists)
