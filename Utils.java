@@ -14,7 +14,7 @@ public class Utils {
 
     public static List<Hotel> findHotelByHotelName(List<Hotel> allHotels, String hotelName) throws NoSuchElementException {
             return allHotels.stream()
-                    .filter((Hotel hotel) -> hotel.getHotelName().equals(hotelName))
+                    .filter((Hotel hotel) -> hotel.getHotelName().equalsIgnoreCase(hotelName))
                     .collect(Collectors.toList());
 
     }
@@ -70,7 +70,7 @@ public class Utils {
         List<Room> rooms = new ArrayList<>();
 
         myHotels = allHotels.stream()
-                .filter((Hotel hotel) -> hotel.getHotelName().equals(hotelName))
+                .filter((Hotel hotel) -> hotel.getHotelName().equalsIgnoreCase(hotelName))
                 .collect(Collectors.toList());
 
         // create room array with all rooms in the city
@@ -81,8 +81,8 @@ public class Utils {
         // delete room if it is booked during requested period
         rooms.removeIf(room -> isBooked(room,checkin, checkout));
 
-        System.out.println("Here are the rooms available during your stay:");
-        System.out.println(rooms);
+        //System.out.println("Here are the rooms available during your stay:");
+        //System.out.println(rooms);
 
         return rooms;
     }
@@ -93,7 +93,7 @@ public class Utils {
         List<Room> rooms = new ArrayList<>();
 
         cityHotels = allHotels.stream()
-                .filter((Hotel hotel) -> hotel.getHotelCity().equals(cityName))
+                .filter((Hotel hotel) -> hotel.getHotelCity().equalsIgnoreCase(cityName))
                 .collect(Collectors.toList());
 
         // create room array with all rooms in the city
@@ -103,9 +103,6 @@ public class Utils {
 
         // delete room if it is booked during requested period
         rooms.removeIf(room -> isBooked(room,checkin, checkout));
-
-        System.out.println("Here are the rooms available during your stay:");
-        System.out.println(rooms);
 
         return rooms;
     }

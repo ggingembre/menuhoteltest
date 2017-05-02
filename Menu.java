@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -11,6 +12,12 @@ public class Menu {
 
     private boolean exit = false;
     private BufferedReader br = null;
+
+    private List<Hotel> allHotels;
+
+    public Menu(List<Hotel> allHotels) {
+        this.allHotels = allHotels;
+    }
 
     private void printHeader(){
         System.out.println("*******************************");
@@ -163,7 +170,6 @@ public class Menu {
     private void printUserRoomMenu(){
         System.out.println("\nPlease make a selection");
         System.out.println("[1] Search room by hotel and dates"); // for all
-        //--searching room
         System.out.println("[2] Search room by city and dates"); // for all
         System.out.println("[3] Go back to main menu");
     }
@@ -269,10 +275,10 @@ public class Menu {
     private void performActionUserHotelMenu(int choice){
         switch(choice){
             case 1:
-                searchHotelByName();
+                searchHotelByName(allHotels);
                 break;
             case 2:
-                searchHotelByCityDates();
+                searchHotelByCityDates(allHotels);
                 break;
             case 3:
                 break;
@@ -295,10 +301,10 @@ public class Menu {
         }
     }
 
-    private void performActionUserHotelResultsMenu(int choice){
+    private void performActionUserHotelResultsMenu(List<Room> rooms, LocalDate checkin, LocalDate checkout, int choice){
         switch (choice){
             case 1:
-                bookRoom();
+                bookRoom(rooms, checkin, checkout);
                 break;
             case 2:
                 printUserHotelMenu();
@@ -309,10 +315,10 @@ public class Menu {
         }
     }
 
-    private void performActionUserRoomResultsMenu(int choice){
+    private void performActionUserRoomResultsMenu(List<Room> rooms, LocalDate checkin, LocalDate checkout, int choice){
         switch (choice){
             case 1:
-                bookRoom();
+                bookRoom(rooms, checkin, checkout);
                 break;
             case 2:
                 printUserRoomMenu();
@@ -366,106 +372,86 @@ public class Menu {
 
     }
 
-    private void searchHotelByName(){
+    private void searchHotelByName(List<Hotel> allHotels){
 
-
-        String hotelName = "";
+        Scanner scan = new Scanner(System.in);
 
         System.out.println("Please enter the hotel name");
-        while(true){
-            try{
-                hotelName = readStringFromConsole();
-                break;
-            }catch(IOException e) {
-                continue;
-            }
-        }
+        String hotelName = scan.nextLine();
 
-        // here call controller function to search for hotel with hotelName
+        System.out.println(Utils.findHotelByHotelName(allHotels, hotelName));
 
-        System.out.println("Here is a list of hotels matching your criteria: ");
-
-        //printUserHotelResultsMenu();
-        //performActionUserHotelResultsMenu(getMenuInput(1,3));
     }
 
-    private void searchHotelByCityDates(){
+    private void searchHotelByCityDates(List<Hotel> allHotels){
         Scanner scan = new Scanner(System.in);
+        List<Hotel> hotelsByCityDates;
+        List<Room> rooms;
 
         System.out.println("Please enter the city name");
         String cityName = scan.nextLine();
-        System.out.println("Please enter your check-in date");
-        String checkin = scan.nextLine();
-        System.out.println("Please enter your check-out date");
-        String checkout = scan.nextLine();
+        LocalDate checkin = Utils.getCheckinDate();
+        LocalDate checkout = Utils.getCheckoutDate(checkin);
 
-        // we need a logic to check the dates (format, and logic: checkin before checkout, and checkout not
-        // more than 30 days after checkin
-
-        // here call controller function to search for hotels in given cities and available at these dates
+        hotelsByCityDates = Utils.findHotelByCityDate(allHotels, cityName, checkin, checkout);
+        rooms = Utils.findRoomByCityDate(allHotels, cityName, checkin, checkout);
 
         System.out.println("Here is a list of hotels with rooms available when you will be in " + cityName +
         " from " + checkin + " to " + checkout);
 
-        // here it would be nice to have a function so that user can enter hotel number and book room.
-        // it should be done easily with an array that would be passed to the hotelresultsmenu.
+        System.out.println(hotelsByCityDates);
 
         printUserHotelResultsMenu();
-        performActionUserHotelResultsMenu(getMenuInput(1,3));
+        performActionUserHotelResultsMenu(rooms, checkin, checkout, getMenuInput(1,3));
 
     }
 
     private void searchRoomHotelDate(){
         Scanner scan = new Scanner(System.in);
+        List<Room> rooms;
 
         System.out.println("Please enter the hotel name");
         String hotelName = scan.nextLine();
-        System.out.println("Please enter your check-in date");
-        String checkin = scan.nextLine();
-        System.out.println("Please enter your check-out date");
-        String checkout = scan.nextLine();
+        LocalDate checkin = Utils.getCheckinDate();
+        LocalDate checkout = Utils.getCheckoutDate(checkin);
 
-        // we need a logic to check the dates (format, and logic: checkin before checkout, and checkout not
-        // more than 30 days after checkin
-        // here perform the search using controller
+        rooms = Utils.findRoomByHotelDate(allHotels, hotelName, checkin, checkout);
 
         System.out.println("Here is a list of rooms that are available in " + hotelName +
         " from " + checkin + " to " + checkout);
 
-        // here again, a function to book one room in the list using an array
+        System.out.println(rooms);
 
         printUserRoomResultsMenu();
-        performActionUserRoomResultsMenu(getMenuInput(1,3));
+        performActionUserRoomResultsMenu(rooms, checkin, checkout, getMenuInput(1,3));
     }
 
     private void searchRoomCityDate() {
         Scanner scan = new Scanner(System.in);
+        List<Room> rooms;
 
-        System.out.println("Please enter the hotel name");
+        System.out.println("Please enter the city name");
         String cityName = scan.nextLine();
-        System.out.println("Please enter your check-in date");
-        String checkin = scan.nextLine();
-        System.out.println("Please enter your check-out date");
-        String checkout = scan.nextLine();
+        LocalDate checkin = Utils.getCheckinDate();
+        LocalDate checkout = Utils.getCheckoutDate(checkin);
 
-        // we need a logic to check the dates (format, and logic: checkin before checkout, and checkout not
-        // more than 30 days after checkin
-        // here call controller function to search for hotels in given cities and available at these dates
+        rooms = Utils.findRoomByCityDate(allHotels, cityName, checkin, checkout);
 
         System.out.println("Here is a list of rooms available when you will be in " + cityName + " from " + checkin
         + " to " + checkout);
 
-        // here again, a function to book one room in the list using an array
+        System.out.println(rooms);
 
         printUserRoomResultsMenu();
-        performActionUserRoomResultsMenu(getMenuInput(1,3));
+        performActionUserRoomResultsMenu(rooms, checkin, checkout, getMenuInput(1,3));
 
     }
 
-    private void bookRoom(){
+    private void bookRoom(List<Room> rooms, LocalDate checkin, LocalDate checkout){
 
+        System.out.println("Here is the room array for room from " + checkin + " to " + checkout + ":");
+        System.out.println(rooms);
         System.out.println("According to some logic, the room has been booked. Please check your email.");
-
     }
 
     private String readStringFromConsole() throws IOException {
@@ -474,4 +460,3 @@ public class Menu {
     }
 
 }
-

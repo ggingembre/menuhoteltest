@@ -123,7 +123,7 @@ public class Main {
         //System.out.println("You have entered the following checkin date: " + checkin);
         //System.out.println("You have entered the following checkout date: " + checkout);
 
-        Menu menu = new Menu();
+        Menu menu = new Menu(allHotels);
         menu.runMenu();
     }
 }
