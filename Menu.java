@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 /**
@@ -161,7 +162,7 @@ public class Menu {
 
     private void printUserRoomMenu(){
         System.out.println("\nPlease make a selection");
-        System.out.println("[1] Search room by hotel and dates"); // forr all
+        System.out.println("[1] Search room by hotel and dates"); // for all
         //--searching room
         System.out.println("[2] Search room by city and dates"); // for all
         System.out.println("[3] Go back to main menu");
@@ -440,7 +441,7 @@ public class Menu {
     private void searchRoomCityDate() {
         Scanner scan = new Scanner(System.in);
 
-        System.out.println("Please enter the city name");
+        System.out.println("Please enter the hotel name");
         String cityName = scan.nextLine();
         System.out.println("Please enter your check-in date");
         String checkin = scan.nextLine();

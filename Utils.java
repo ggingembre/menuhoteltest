@@ -21,24 +21,7 @@ public class Utils {
 
     public static List<Hotel> findHotelByCityDate(List<Hotel> allHotels, String cityName, LocalDate checkin, LocalDate checkout) throws NoSuchElementException {
 
-        List<Hotel> cityHotels;
-        List<Hotel> hotelsByCityByDate = new ArrayList<>();
-        List<Room> rooms = new ArrayList<>();
-
-        cityHotels = allHotels.stream()
-                .filter((Hotel hotel) -> hotel.getHotelCity().equals(cityName))
-                .collect(Collectors.toList());
-
-        // create room array with all rooms in the city
-        for (Hotel hotel : cityHotels) {
-            rooms.addAll(hotel.getHotelRooms());
-        }
-
-        // delete room if it is booked during requested period
-        rooms.removeIf(room -> isBooked(room,checkin, checkout));
-
-        System.out.println("Here are the rooms after checking for dates:");
-        System.out.println(rooms);
+        List<Room> rooms = findRoomByCityDate(allHotels, cityName, checkin, checkout);
 
         // create array of hotels with available rooms from the room array
         List<Hotel> hotelDuplicates = new ArrayList<>();
@@ -47,9 +30,10 @@ public class Utils {
         }
 
         // removing duplicates
-        Set<Hotel> hotelsNoD = new HashSet<Hotel>();
+        Set<Hotel> hotelsNoD = new HashSet<>();
         hotelsNoD.addAll(hotelDuplicates);
 
+        List<Hotel> hotelsByCityByDate = new ArrayList<>();
         hotelsByCityByDate.addAll(hotelsNoD);
 
         // issue: when printing results, it also prints rooms that are not available... maybe better to return a
@@ -78,6 +62,52 @@ public class Utils {
         }
 
         return isBooked;
+    }
+
+    public static List<Room> findRoomByHotelDate(List<Hotel> allHotels, String hotelName, LocalDate checkin, LocalDate checkout) throws NoSuchElementException {
+
+        List<Hotel> myHotels;
+        List<Room> rooms = new ArrayList<>();
+
+        myHotels = allHotels.stream()
+                .filter((Hotel hotel) -> hotel.getHotelName().equals(hotelName))
+                .collect(Collectors.toList());
+
+        // create room array with all rooms in the city
+        for (Hotel hotel : myHotels) {
+            rooms.addAll(hotel.getHotelRooms());
+        }
+
+        // delete room if it is booked during requested period
+        rooms.removeIf(room -> isBooked(room,checkin, checkout));
+
+        System.out.println("Here are the rooms available during your stay:");
+        System.out.println(rooms);
+
+        return rooms;
+    }
+
+    public static List<Room> findRoomByCityDate(List<Hotel> allHotels, String cityName, LocalDate checkin, LocalDate checkout) throws NoSuchElementException {
+
+        List<Hotel> cityHotels;
+        List<Room> rooms = new ArrayList<>();
+
+        cityHotels = allHotels.stream()
+                .filter((Hotel hotel) -> hotel.getHotelCity().equals(cityName))
+                .collect(Collectors.toList());
+
+        // create room array with all rooms in the city
+        for (Hotel hotel : cityHotels) {
+            rooms.addAll(hotel.getHotelRooms());
+        }
+
+        // delete room if it is booked during requested period
+        rooms.removeIf(room -> isBooked(room,checkin, checkout));
+
+        System.out.println("Here are the rooms available during your stay:");
+        System.out.println(rooms);
+
+        return rooms;
     }
 
     public static LocalDate readDateFromConsole(){

@@ -99,21 +99,31 @@ public class Main {
         allHotels.add(vintage);
         allHotels.add(rynok);
 
-        System.out.println("By hotel name:");
-        System.out.println(Utils.findHotelByHotelName(allHotels, "Hyatt"));
+        // look for hotels by hotel name
+        //System.out.println("By hotel name:");
+        //System.out.println(Utils.findHotelByHotelName(allHotels, "Hyatt"));
 
         // look for hotels by city and date
 
-        //System.out.println("By city name:");
-        System.out.println(Utils.findHotelByCityDate(allHotels, "Kiev", checkin1, checkout1));
+        //System.out.println("Hotel by city name:");
+        //System.out.println(Utils.findHotelByCityDate(allHotels, "Kiev", checkin1, checkout1));
 
-        LocalDate checkin = Utils.getCheckinDate();
-        LocalDate checkout = Utils.getCheckoutDate(checkin);
+        // look for rooms by city and date
+        //System.out.println("Room by city name:");
+        //Utils.findRoomByCityDate(allHotels, "Kiev", checkin1, checkout1);
+        //System.out.println(Utils.findRoomByCityDate(allHotels, "Kiev", checkin1, checkout1));
 
-        System.out.println("You have entered the following checkin date: " + checkin);
-        System.out.println("You have entered the following checkout date: " + checkout);
+        // look for rooms by hotel name and date
+        //System.out.println("Room by hotel name:");
+        //Utils.findRoomByHotelDate(allHotels, "Hyatt", checkin1, checkout1);
 
-        //Menu menu = new Menu();
-        //menu.runMenu();
+        //LocalDate checkin = Utils.getCheckinDate();
+        //LocalDate checkout = Utils.getCheckoutDate(checkin);
+
+        //System.out.println("You have entered the following checkin date: " + checkin);
+        //System.out.println("You have entered the following checkout date: " + checkout);
+
+        Menu menu = new Menu();
+        menu.runMenu();
     }
 }
