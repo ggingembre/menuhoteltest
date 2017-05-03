@@ -228,15 +228,15 @@ public class Menu {
 
     private int getMenuInput(int min, int max){
         int choice = 0;
-        Scanner scan = new Scanner(System.in);
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        while (choice < min || choice > max){
-            try{
+        while (choice < min || choice > max) {
+            try {
                 System.out.print("\nEnter your selection");
-              choice = Integer.parseInt(scan.nextLine());
-              if (choice < min || choice > max) throw new OutOfMenuRangeException();
+                choice = Integer.parseInt(br.readLine());
+                if (choice < min || choice > max) throw new OutOfMenuRangeException();
 
-            } catch (NumberFormatException | OutOfMenuRangeException e){
+            } catch (NumberFormatException | OutOfMenuRangeException | IOException e) {
                 System.out.println("Invalid selection, please try again");
             }
         }
@@ -273,12 +273,15 @@ public class Menu {
     }
 
     private void performActionUserHotelMenu(int choice){
+        SearchResults results;
         switch(choice){
             case 1:
                 searchHotelByName(allHotels);
                 break;
             case 2:
-                searchHotelByCityDates(allHotels);
+                results = searchHotelByCityDates(allHotels);
+                printUserHotelResultsMenu();
+                performActionUserHotelResultsMenu(results, getMenuInput(1,3));
                 break;
             case 3:
                 break;
@@ -289,22 +292,27 @@ public class Menu {
     }
 
     private void performActionUserRoomMenu(int choice){
+        SearchResults results;
         switch (choice){
             case 1:
-                searchRoomHotelDate();
+                results = searchRoomHotelDate();
+                printUserRoomResultsMenu();
+                performActionUserRoomResultsMenu(results, getMenuInput(1,3));
                 break;
             case 2:
-                searchRoomCityDate();
+                results = searchRoomCityDate();
+                printUserRoomResultsMenu();
+                performActionUserRoomResultsMenu(results, getMenuInput(1,3));
                 break;
             case 3:
                 break;
         }
     }
 
-    private void performActionUserHotelResultsMenu(List<Room> rooms, LocalDate checkin, LocalDate checkout, int choice){
+    private void performActionUserHotelResultsMenu(SearchResults results, int choice){
         switch (choice){
             case 1:
-                bookRoom(rooms, checkin, checkout);
+                bookRoom(results);
                 break;
             case 2:
                 printUserHotelMenu();
@@ -315,10 +323,10 @@ public class Menu {
         }
     }
 
-    private void performActionUserRoomResultsMenu(List<Room> rooms, LocalDate checkin, LocalDate checkout, int choice){
+    private void performActionUserRoomResultsMenu(SearchResults results, int choice){
         switch (choice){
             case 1:
-                bookRoom(rooms, checkin, checkout);
+                bookRoom(results);
                 break;
             case 2:
                 printUserRoomMenu();
@@ -383,7 +391,7 @@ public class Menu {
 
     }
 
-    private void searchHotelByCityDates(List<Hotel> allHotels){
+    private SearchResults searchHotelByCityDates(List<Hotel> allHotels){
         Scanner scan = new Scanner(System.in);
         List<Hotel> hotelsByCityDates;
         List<Room> rooms;
@@ -401,12 +409,13 @@ public class Menu {
 
         System.out.println(hotelsByCityDates);
 
-        printUserHotelResultsMenu();
-        performActionUserHotelResultsMenu(rooms, checkin, checkout, getMenuInput(1,3));
+        SearchResults results = new SearchResults(checkin, checkout, rooms);
+
+        return results;
 
     }
 
-    private void searchRoomHotelDate(){
+    private SearchResults searchRoomHotelDate(){
         Scanner scan = new Scanner(System.in);
         List<Room> rooms;
 
@@ -422,11 +431,15 @@ public class Menu {
 
         System.out.println(rooms);
 
-        printUserRoomResultsMenu();
-        performActionUserRoomResultsMenu(rooms, checkin, checkout, getMenuInput(1,3));
+        SearchResults results = new SearchResults(checkin, checkout, rooms);
+
+        return results;
+
+        //printUserRoomResultsMenu();
+        //performActionUserRoomResultsMenu(rooms, checkin, checkout, getMenuInput(1,3));
     }
 
-    private void searchRoomCityDate() {
+    private SearchResults searchRoomCityDate() {
         Scanner scan = new Scanner(System.in);
         List<Room> rooms;
 
@@ -442,21 +455,21 @@ public class Menu {
 
         System.out.println(rooms);
 
-        printUserRoomResultsMenu();
-        performActionUserRoomResultsMenu(rooms, checkin, checkout, getMenuInput(1,3));
+        SearchResults results = new SearchResults(checkin, checkout, rooms);
+
+        return results;
 
     }
 
-    private void bookRoom(List<Room> rooms, LocalDate checkin, LocalDate checkout){
+    private void bookRoom(SearchResults results){
+
+        LocalDate checkin = results.getCheckin();
+        LocalDate checkout = results.getCheckout();
+        List<Room> rooms = results.getRooms();
 
         System.out.println("Here is the room array for room from " + checkin + " to " + checkout + ":");
         System.out.println(rooms);
         System.out.println("According to some logic, the room has been booked. Please check your email.");
-    }
-
-    private String readStringFromConsole() throws IOException {
-        br = new BufferedReader(new InputStreamReader(System.in));
-        return br.readLine(); //throw IOException
     }
 
 }
