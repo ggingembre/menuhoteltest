@@ -12,6 +12,13 @@ import java.util.stream.Collectors;
  */
 public class Utils {
 
+    public static User loginAndPasswordVerification(List<User> allUsers, String login, String password) {
+        Optional<User> optional = allUsers.stream()
+                .filter(o -> o.getUserName().equals(login) && o.getPassword().equals(password))
+                .findFirst();
+        return optional.orElse(null);
+    }
+
     public static List<Hotel> findHotelByHotelName(List<Hotel> allHotels, String hotelName) throws NoSuchElementException {
             return allHotels.stream()
                     .filter((Hotel hotel) -> hotel.getHotelName().equalsIgnoreCase(hotelName))

@@ -55,6 +55,11 @@ public class Main {
         User charles = new User ("cgalant@gmail.com", "cgalant", "test");
         User elena = new User ("elena@gmail.com", "elena", "test");
 
+        List<User> allUsers = new ArrayList<>();
+        allUsers.add(guillaume);
+        allUsers.add(charles);
+        allUsers.add(elena);
+
         // create reservations
         LocalDate checkin1 = LocalDate.of(2017, Month.MAY, 12);
         LocalDate checkout1 = LocalDate.of(2017, Month.MAY, 14);
@@ -123,7 +128,9 @@ public class Main {
         //System.out.println("You have entered the following checkin date: " + checkin);
         //System.out.println("You have entered the following checkout date: " + checkout);
 
-        Menu menu = new Menu(allHotels);
+        Session session = new Session();
+
+        Menu menu = new Menu(session, allUsers, allHotels);
         menu.runMenu();
     }
 }

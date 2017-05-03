@@ -14,8 +14,12 @@ public class Menu {
     private BufferedReader br = null;
 
     private List<Hotel> allHotels;
+    private Session session;
+    private List<User> allUsers;
 
-    public Menu(List<Hotel> allHotels) {
+    public Menu(Session session, List<User> allUsers, List<Hotel> allHotels) {
+        this.session = session;
+        this.allUsers = allUsers;
         this.allHotels = allHotels;
     }
 
@@ -30,7 +34,7 @@ public class Menu {
     access rights for all:
      */
 
-    private void printUserMainMenu(){
+    private void printGuestMainMenu(){
         System.out.println("\nPlease make a selection");
         System.out.println("[1] Register");
             // (check login)
@@ -143,6 +147,16 @@ public class Menu {
         System.out.println("[6] Exit");
     }
 
+    private void printUserMainMenu() {
+        System.out.println("\nPlease make a selection");
+        System.out.println("[1] Update your profile");
+        System.out.println("[2] Logout");
+        System.out.println("[3] Search / book a room");
+        System.out.println("[4] Search a hotel");
+        System.out.println("[5] Admin menu");
+        System.out.println("[6] Exit");
+    }
+
     /*if enough time:
     - allow user to change his information
 
@@ -220,8 +234,8 @@ public class Menu {
 
         printHeader();
         while(!exit){
-            printUserMainMenu();
-            performActionUserMainMenu(getMenuInput(1,6));
+            printGuestMainMenu();
+            performActionGuestMainMenu(getMenuInput(1,6));
         }
 
     }
@@ -244,13 +258,20 @@ public class Menu {
     }
 
 
-    private void performActionUserMainMenu(int choice){
+    private void performActionGuestMainMenu(int choice){
         switch(choice){
             case 1:
                 createUser();
                 break;
             case 2:
-                //login
+                session = login(session, allUsers);
+                if (session.isGuest()){
+                    printGuestMainMenu();
+                    performActionGuestMainMenu(getMenuInput(1,6));
+                }else{
+                    printUserMainMenu();
+                    performActionUserMainMenu(getMenuInput(1,6));
+                }
                 break;
             case 3:
                 printUserRoomMenu();
@@ -334,6 +355,38 @@ public class Menu {
                 break;
             case 3:
                 break;
+        }
+    }
+
+    private void performActionUserMainMenu(int choice) {
+        switch (choice) {
+            case 1:
+                updateUser(session.getUser());
+                printUserMainMenu();
+                performActionUserMainMenu(getMenuInput(1,6));
+                break;
+            case 2:
+                logout(session);
+                printGuestMainMenu();
+                performActionGuestMainMenu(getMenuInput(1,6));
+                break;
+            case 3:
+                printUserRoomMenu();
+                performActionUserRoomMenu(getMenuInput(1, 3));
+                break;
+            case 4:
+                printUserHotelMenu();
+                performActionUserHotelMenu(getMenuInput(1, 3));
+                break;
+            case 5:
+                // login
+                printAdminMainMenu();
+                //performActionAdminMainMenu();
+            case 6:
+                exit = true;
+                System.out.println("Thank you for using our application");
+                // default:
+                //     System.out.println("An unknown error has occurred");
         }
     }
 
@@ -470,6 +523,73 @@ public class Menu {
         System.out.println("Here is the room array for room from " + checkin + " to " + checkout + ":");
         System.out.println(rooms);
         System.out.println("According to some logic, the room has been booked. Please check your email.");
+    }
+
+    private Session login (Session session, List<User> allUsers){
+        String userName;
+        String pass;
+        User user;
+
+        Scanner scan = new Scanner(System.in);
+
+        if (!session.isGuest()) System.out.println("You already logged in as " + session.getUser().getUserName());
+
+        if (session.isGuest()){
+            // get login credentials from user
+            System.out.println("Please enter your username");
+            userName = scan.nextLine();
+            System.out.println("Please enter your password");
+            pass = scan.nextLine();
+
+            // try to login
+            user = Utils.loginAndPasswordVerification(allUsers, userName, pass);
+            if (user == null) System.out.println("Wrong login credentials: please either register or try again");
+            else{
+                // update session info
+                session.setUser(user);
+                session.setGuest(false);
+
+                if (user.isAdmin()) session.setAdmin(true);
+            }
+        }
+
+        return session;
+    }
+
+    private Session logout(Session session){
+        session.setUser(null);
+        session.setGuest(true);
+        session.setAdmin(false);
+
+        return session;
+    }
+
+    private User updateUser(User user){
+        String userName;
+        String pass;
+        String email;
+
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Please enter your updated information");
+
+        System.out.println("Please enter your new email");
+        email = scan.nextLine();
+
+        System.out.println("Please enter your new user name");
+        userName = scan.nextLine();
+
+        System.out.println("Please enter your new password");
+        pass = scan.nextLine();
+
+        user.setEmail(email);
+        user.setUserName(userName);
+        user.setPassword(pass);
+
+        // procedure to save user to DB
+
+        System.out.println("Your data has been successfully saved");
+
+        return user;
     }
 
 }
