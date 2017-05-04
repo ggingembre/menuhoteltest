@@ -446,7 +446,6 @@ public class Menu {
 
     private SearchResults searchHotelByCityDates(List<Hotel> allHotels){
         Scanner scan = new Scanner(System.in);
-        List<Hotel> hotelsByCityDates;
         List<Room> rooms;
 
         System.out.println("Please enter the city name");
@@ -454,13 +453,8 @@ public class Menu {
         LocalDate checkin = Utils.getCheckinDate();
         LocalDate checkout = Utils.getCheckoutDate(checkin);
 
-        hotelsByCityDates = Utils.findHotelByCityDate(allHotels, cityName, checkin, checkout);
         rooms = Utils.findRoomByCityDate(allHotels, cityName, checkin, checkout);
-
-        System.out.println("Here is a list of hotels with rooms available when you will be in " + cityName +
-        " from " + checkin + " to " + checkout);
-
-        System.out.println(hotelsByCityDates);
+        Utils.printRoomResults(rooms, checkin, checkout, cityName);
 
         SearchResults results = new SearchResults(checkin, checkout, rooms);
 
@@ -479,10 +473,7 @@ public class Menu {
 
         rooms = Utils.findRoomByHotelDate(allHotels, hotelName, checkin, checkout);
 
-        System.out.println("Here is a list of rooms that are available in " + hotelName +
-        " from " + checkin + " to " + checkout);
-
-        System.out.println(rooms);
+        Utils.printRoomResults(rooms, checkin, checkout, hotelName);
 
         SearchResults results = new SearchResults(checkin, checkout, rooms);
 
@@ -502,11 +493,7 @@ public class Menu {
         LocalDate checkout = Utils.getCheckoutDate(checkin);
 
         rooms = Utils.findRoomByCityDate(allHotels, cityName, checkin, checkout);
-
-        System.out.println("Here is a list of rooms available when you will be in " + cityName + " from " + checkin
-        + " to " + checkout);
-
-        System.out.println(rooms);
+        Utils.printRoomResults(rooms, checkin, checkout, cityName);
 
         SearchResults results = new SearchResults(checkin, checkout, rooms);
 
