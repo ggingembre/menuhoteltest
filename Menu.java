@@ -539,7 +539,7 @@ public class Menu {
 
         // add booking to room:
         //room.getBookings().add(newBook);
-        //we may need a special method to add booking to a room. 
+        //we may need a special method to add booking to a room.
 
         System.out.println("Congratulations, your room is booked!");
         System.out.println("\nHere is a summary of your booking:");
@@ -630,9 +630,11 @@ public class Menu {
                 session = login(session, allUsers);
                 break;
             case 2:
-                allUsers.add(createUser());
-                session = login(session, allUsers);
-                break;
+                User registeredUser = createUser();
+                allUsers.add(registeredUser);
+                session.setUser(registeredUser);
+                session.setGuest(false);
+                session.setAdmin(false);
         }
     }
 
