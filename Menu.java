@@ -342,6 +342,8 @@ public class Menu {
         switch (choice){
             case 1:
                 bookRoom(results);
+                printBookingResultsMenu();
+                performActionBookingResultsMenu(getMenuInput(1,2));
                 break;
             case 2:
                 printUserHotelMenu();
@@ -359,6 +361,8 @@ public class Menu {
         switch (choice){
             case 1:
                 bookRoom(results);
+                printBookingResultsMenu();
+                performActionBookingResultsMenu(getMenuInput(1,2));
                 break;
             case 2:
                 printUserRoomMenu();
@@ -404,7 +408,7 @@ public class Menu {
         }
     }
 
-    private void createUser(){
+    private User createUser(){
 
         User newUser;
         String firstName = "";
@@ -429,9 +433,6 @@ public class Menu {
             password = scan.nextLine();
 
             System.out.println("\nHere is a summary of your data:");
-            System.out.println("First name: " + firstName);
-            System.out.println("Last name: " + lastName);
-            System.out.println("Address: " + address);
             System.out.println("Email: " + email);
             System.out.println("Username: " + userName);
 
@@ -442,8 +443,7 @@ public class Menu {
 
         newUser = new User(email, userName, password);
 
-        System.out.println(newUser);
-        // here save this user to the database (and check if user already exists)
+        return newUser;
 
     }
 
@@ -518,10 +518,36 @@ public class Menu {
         LocalDate checkin = results.getCheckin();
         LocalDate checkout = results.getCheckout();
         List<Room> rooms = results.getRooms();
+        int roomChoice;
 
-        System.out.println("Here is the room array for room from " + checkin + " to " + checkout + ":");
-        System.out.println(rooms);
-        System.out.println("According to some logic, the room has been booked. Please check your email.");
+        System.out.println("Please enter the number of the room you would like to book from the list:");
+        Utils.printRoomResults(rooms, checkin, checkout, "");
+        roomChoice = getMenuInput(1,rooms.size()) - 1;
+
+        Room room = rooms.get(roomChoice);
+
+        // if user not logged in, prompt him to login:
+        if (session.isGuest()){
+            System.out.println("You need to login first");
+            while(session.isGuest()){
+                printLoginMenu();
+                performActionPrintLoginMenu(getMenuInput(1, 2));
+            }
+        }
+
+        Reservation newBook = new Reservation(session.getUser(), room, checkin, checkout);
+
+        // add booking to room:
+        //room.getBookings().add(newBook);
+        //we may need a special method to add booking to a room. 
+
+        System.out.println("Congratulations, your room is booked!");
+        System.out.println("\nHere is a summary of your booking:");
+        System.out.println("Booking name: " + newBook.getUser().getEmail() + "\nHotel: "+
+                newBook.getRoom().getHotel().getHotelName() + ";\nRoom: " + newBook.getRoom() +
+                "\nCheck-in Date: " + newBook.getDateOfArrival() + "\nCheckout date:" + newBook.getDateOfDeparture() + ".");
+
+        System.out.println("Thank you for using our services to book your stay!");
     }
 
     private Session login (Session session, List<User> allUsers){
@@ -589,6 +615,43 @@ public class Menu {
         System.out.println("Your data has been successfully saved");
 
         return user;
+    }
+
+
+    private void printLoginMenu() {
+        System.out.println("\nPlease make a selection");
+        System.out.println("[1] Login");
+        System.out.println("[2] Register");
+    }
+
+    private void performActionPrintLoginMenu(int choice){
+        switch(choice){
+            case 1:
+                session = login(session, allUsers);
+                break;
+            case 2:
+                allUsers.add(createUser());
+                session = login(session, allUsers);
+                break;
+        }
+    }
+
+    private void printBookingResultsMenu() {
+        System.out.println("\nPlease make a selection");
+        System.out.println("[1] Go back to main menu");
+        System.out.println("[2] Exit");
+    }
+
+    private void performActionBookingResultsMenu(int choice){
+        switch(choice){
+            case 1:
+                printUserMainMenu();
+                performActionUserMainMenu(getMenuInput(1,6));
+                break;
+            case 2:
+                System.out.println("Thank you for using our application, we hope to see you again soon!");
+                System.exit (0);
+        }
     }
 
 }
