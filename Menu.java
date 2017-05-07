@@ -261,7 +261,7 @@ public class Menu {
     private void performActionGuestMainMenu(int choice){
         switch(choice){
             case 1:
-                createUser();
+                createUser(allUsers);
                 break;
             case 2:
                 session = login(session, allUsers);
@@ -408,7 +408,7 @@ public class Menu {
         }
     }
 
-    private User createUser(){
+    private User createUser(List<User> allUsers){
 
         User newUser;
         String firstName = "";
@@ -439,6 +439,18 @@ public class Menu {
             System.out.println("If this is correct, please enter Y, else press any key");
             yn = scan.nextLine();
             if (yn.equalsIgnoreCase("Y")) ok = true;
+
+            // check if user exists, if not create new user in DAO
+            String finalUserName = userName;
+            String finalEmail = email;
+            if (allUsers.stream()
+                    .anyMatch((User o) -> o.getEmail().equalsIgnoreCase(finalEmail) ||
+                            o.getUserName().equals(finalUserName))){
+                System.out.println("An account with this name and / or login already exists. " +
+                        "Please try again");
+                ok = false;
+            }
+
         }
 
         newUser = new User(email, userName, password);
@@ -630,7 +642,7 @@ public class Menu {
                 session = login(session, allUsers);
                 break;
             case 2:
-                User registeredUser = createUser();
+                User registeredUser = createUser(allUsers);
                 allUsers.add(registeredUser);
                 session.setUser(registeredUser);
                 session.setGuest(false);
